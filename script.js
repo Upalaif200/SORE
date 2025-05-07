@@ -1,80 +1,145 @@
-    // Funciones para interactuar con la API
-    async function fetchRanking() {
-        try {
-            const response = await fetch('https://api.example.com/ranking');
-            const data = await response.json();
-            console.log('Ranking from API:', data);
-            return data;
-        } catch (error) {
-            console.error('Error fetching ranking:', error);
-        }
+function toggleAside() {
+    const aside = document.getElementById("side-panel");
+    const arrow = document.getElementById("arrowBtn");
+    const arrowBar = document.getElementById("arrowBar");
+
+    aside.classList.toggle("hidden");
+
+    if (aside.classList.contains("hidden")) {
+      arrow.innerText = "→";
+      arrowBar.classList.add("hidden");
+    } else {
+      arrow.innerText = "←";
+      arrowBar.classList.remove("hidden");
     }
+  }
 
-    async function saveUserToAPI(user) {
-        try {
-            const response = await fetch('https://api.example.com/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(user),
-            });
-            const data = await response.json();
-            console.log('User saved to API:', data);
-        } catch (error) {
-            console.error('Error saving user to API:', error);
-        }
+  function createFile() {
+    const fileName = prompt("Ingrese el nombre del archivo:");
+    const description = prompt("Ingrese una descripción para el archivo:");
+    const tags = prompt("Ingrese etiquetas separadas por comas:");
+    if (fileName) {
+      alert(`Archivo "${fileName}" creado con éxito.`);
     }
+  }
 
-    // Actualizar el ranking en línea y local
-    async function updateOnlineLeaderboard() {
-        const leaderboard = document.getElementById('leaderboard');
-        leaderboard.innerHTML = '<p>Cargando ranking...</p>';
-        const data = await fetchRanking();
-        if (data) {
-            leaderboard.innerHTML = '';
-            data.forEach(user => {
-                const entry = document.createElement('div');
-                entry.className = 'leaderboard-entry';
-                entry.innerHTML = `
-                    <span>${user.name}</span>
-                    <span>${user.balance} OD</span>
-                `;
-                leaderboard.appendChild(entry);
-            });
-        } else {
-            leaderboard.innerHTML = '<p>Error al cargar el ranking.</p>';
-        }
+  function openFile() {
+    alert("Seleccione un archivo para abrir.");
+  }
+
+  function importFile() {
+    alert("Importar archivo desde el dispositivo.");
+  }
+
+  function exportFile() {
+    alert("Exportar archivo seleccionado en formato Excel.");
+  }
+
+  function createFolder() {
+    const folderName = prompt("Ingrese el nombre de la carpeta:");
+    const description = prompt("Ingrese una descripción para la carpeta:");
+    const tags = prompt("Ingrese etiquetas separadas por comas:");
+    if (folderName) {
+      alert(`Carpeta "${folderName}" creada con éxito.`);
     }
+  }
 
-    // Guardar usuario localmente y en la API
-    function saveUser(user) {
-        // Guardar en localStorage
-        users[user.name] = { password: user.password, money: user.balance, avatar: user.avatar };
-        saveUsers();
+  function openFolder() {
+    alert("Seleccione una carpeta para abrir.");
+  }
 
-        // Guardar en la API
-        saveUserToAPI(user);
+  function pinItem() {
+    alert("Elemento fijado.");
+  }
+
+  function unpinItem() {
+    alert("Elemento desfijado.");
+  }
+
+  function viewFileInfo() {
+    alert("Mostrando información del archivo.");
+  }
+
+  function createTag() {
+    const tagName = prompt("Ingrese el nombre de la etiqueta:");
+    const tagColor = prompt("Ingrese el color de la etiqueta (en formato hexadecimal):");
+    if (tagName && tagColor) {
+      alert(`Etiqueta "${tagName}" creada con éxito.`);
     }
+  }
 
-    // Sobrescribir la función de actualización de balance para incluir la API
-    function updateBalance(amount) {
-        balance += amount;
-        if (balance < 0) balance = 0;
-        users[currentUser].money = balance;
-        document.getElementById('userBalance').innerText = `${balance} OD`;
-        saveUsers();
+  function deleteTag() {
+    alert("Seleccione una etiqueta para borrar.");
+  }
 
-        // Guardar el usuario actualizado en la API
-        saveUserToAPI({
-            name: currentUser,
-            balance: balance,
-            avatar: users[currentUser].avatar,
-        });
+  function deleteItem() {
+    alert("Seleccione un archivo o carpeta para borrar.");
+  }
 
-        // Actualizar el ranking en línea
-        updateOnlineLeaderboard();
-    }
+// Función para mostrar la pestaña correspondiente al hacer clic
 
-    // Llamar a la función para cargar el ranking al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-        updateOnlineLeaderboard();
-    });
+function showTab(index) {
+  const tabs = document.querySelectorAll('.tab');
+  const contents = document.querySelectorAll('.tab-content div');
+
+  tabs.forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+  });
+
+  contents.forEach((content, i) => {
+      content.classList.toggle('active', i === index);
+  });
+}
+
+const folderInput = document.getElementById('folderInput');
+const fileList = document.getElementById('fileList');
+
+folderInput.addEventListener('change', (event) => {
+  fileList.innerHTML = ''; // Limpiar la lista de archivos
+  const files = Array.from(event.target.files);
+
+  const folderStructure = {};
+
+  files.forEach(file => {
+      const pathParts = file.webkitRelativePath.split('/');
+      let currentLevel = folderStructure;
+
+      pathParts.forEach((part, index) => {
+          if (!currentLevel[part]) {
+              currentLevel[part] = index === pathParts.length - 1 ? null : {};
+          }
+          currentLevel = currentLevel[part];
+      });
+  });
+
+  function createList(structure) {
+      const ul = document.createElement('ul');
+      for (const key in structure) {
+          const li = document.createElement('li');
+          const toggleBtn = document.createElement('span');
+          toggleBtn.textContent = structure[key] ? '▶' : ''; // Flecha derecha
+          toggleBtn.className = 'toggle-btn';
+          toggleBtn.onclick = () => {
+              const childUl = li.querySelector('ul');
+              if (childUl) {
+                  const isHidden = childUl.classList.toggle('hidden');
+                  toggleBtn.textContent = isHidden ? '▶' : '▼'; // Alternar flecha
+              }
+          };
+
+          li.appendChild(toggleBtn);
+          li.appendChild(document.createTextNode(key));
+
+          if (structure[key]) {
+              const childUl = createList(structure[key]);
+              childUl.classList.add('hidden'); // Ocultar inicialmente
+              li.appendChild(childUl);
+          }
+
+          ul.appendChild(li);
+      }
+      return ul;
+  }
+
+  fileList.appendChild(createList(folderStructure));
+});
