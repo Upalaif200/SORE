@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S0R3</title>
+  <style>
+    :root {
+      --morado: #6a1b9a;
+      --gris-claro: #e0e0e0;
+      --gris-oscuro: #424242;
+      --blanco: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--gris-claro);
+      color: var(--gris-oscuro);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+        top: 0;
+        position: sticky;
+        background: var(--morado);
+        color: var(--blanco);
+        padding: 0.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        z-index: 1000;
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    nav button {
+      background: var(--gris-claro);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 3.5dvh;
+      background: var(--blanco);
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      z-index: 1;
+      border-radius: 5px;
+      min-width: 200px;
+    }
+
+    .dropdown-content button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem;
+      background: var(--gris-claro);
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .dropdown-content button:hover {
+      background: var(--morado);
+      color: var(--blanco);
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .main-content {
+      flex: 3;
+      background: var(--blanco);
+      padding: 0rem 1rem 1rem;
+      margin: 1rem;
+      border-radius: 10px;
+      min-width: 200px;
+    }
+
+    .tab-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .tabs {
+      display: flex;
+      cursor: pointer;
+      max-width: 50%;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background-color: #f2f2f2;
+      transition: 0.3s all;
+    }
+
+    .tab.active {
+      background-color: #ffffff;
+      font-weight: bold;
+      transition: 0.3s all;
+      transform: translateY(-10px);
+      border-radius: 15px 15px 0 0;
+    }
+
+    .tab-content {
+      border-top: 1px solid #ccc;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    .tab-content div {
+      display: none;
+    }
+
+    .tab-content div.active {
+      display: block;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin: 5px 0;
+      position: relative;
+    }
+
+    .toggle-btn {
+      cursor: pointer;
+      margin-right: 5px;
+      font-size: 12px;
+      user-select: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .highlight {
+      background-color: #d3d3d3;
+    }
+
+    .pin {
+      float: right;
+      cursor: pointer;
+      font-size: 16px;
+      color: gray;
+    }
+
+    .pin.active {
+      color: gold;
+    }
+
+    .aside-container {
+        display: flex;
+        flex-direction: row;
+        top: 10dvh;
+        position: sticky;
+        max-height: 90dvh;
+    }
+
+    aside {
+      flex: 1;
+      background: var(--gris-oscuro);
+      color: var(--blanco);
+      padding: 1rem;
+      margin: 1rem 0 1rem 0;
+      min-width: 250px;
+      display: block;
+    }
+
+    aside.hidden {
+      position: absolute;
+    }
+
+    .arrow-toggle {
+      width: 25px;
+      background: var(--morado);
+      color: var(--blanco);
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px 15px 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .arrow-bar {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--morado);
+      border-radius: 5px 0 0 5px;
+      margin: 1rem 0;
+    }
+
+    .arrow-bar.hidden {
+      border-radius: 5px;
+    }
+
+    footer {
+      background: var(--morado);
+      color: var(--blanco);
+      text-align: center;
+      padding: 0.4rem;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+      }
+
+      .aside-container {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .arrow-bar {
+        display: none;
+      }
+
+      aside {
+        display: block !important;
+        border-radius: 0;
+        width: 100%;
+        margin: 0;
+      }
+
+      .main-content {
+        width: 100%;
+        margin: 1rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <h1>SORE</h1>
+    </div>
+    <nav style="width: 45%; gap: 0;">
+    <button id="filterButton" onclick="toggleFilterMenu()" style="padding: 0.5rem; border-radius: 5px; border: 1px solid var(--gris-oscuro); background: var(--gris-claro); cursor: pointer; transform: translateX(5px);">
+    ⚙️
+    </button>
+    <div id="filterMenu" style="display: none; position: absolute; background: var(--blanco); width: min-content; border: 1px solid var(--gris-oscuro); border-radius: 5px; padding: 0.5rem; z-index: 1000; flex-direction: column;">
+      <label>
+      <select id="filterType">
+      <option value="todos" selected>Todos</option>
+      <option value="archivo">Archivo</option>
+      <option value="carpeta">Carpeta</option>
+      </select>
+      </label>
+      <label>
+      <select id="filterDetails">
+      <option value="nombre" selected>Nombre</option>
+      <option value="etiqueta">Etiqueta</option>
+      </select>
+      </label>
+      <button onclick="applyFilter()" style="margin-top: 0.5rem; padding: 0.5rem; border-radius: 5px; border: 1px solid var(--gris-oscuro); background: var(--gris-claro); cursor: pointer;">
+      Aplicar Filtro
+      </button>
+        </div>
+        <input 
+      type="text" 
+      id="searchBar" 
+      placeholder="Buscar archivos o carpetas..." 
+      oninput="searchItems()" 
+      onkeypress="handleEnter(event)" 
+      style="padding: 0.5rem; border-radius: 5px; border: 1px solid var(--gris-oscuro); width: 85%;" 
+        >
+        <script>
+      function toggleFilterMenu() {
+      const filterMenu = document.getElementById('filterMenu');
+      filterMenu.style.display = filterMenu.style.display === 'none' ? 'flex' : 'none';
+      }
+
+      function applyFilter() {
+      const type = document.getElementById('filterType').value;
+      const details = document.getElementById('filterDetails').value;
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      const activeTabContent = document.querySelector('.tab-content div.active');
+      const items = activeTabContent.querySelectorAll('li');
+
+      items.forEach(item => {
+        const isFolder = item.querySelector('.icon')?.textContent === '📁';
+        const text = item.textContent.toLowerCase();
+        const matchesType = 
+        type === 'todos' || 
+        (type === 'carpeta' && isFolder) || 
+        (type === 'archivo' && !isFolder);
+        const matchesDetails = details === 'nombre' ? text.includes(query) : item.querySelector('span')?.textContent.toLowerCase().includes(query);
+
+        if (matchesType && matchesDetails) {
+        item.style.display = '';
+        } else {
+        item.style.display = 'none';
+        }
+      });
+
+      toggleFilterMenu(); // Cerrar el menú de filtro
+      }
+
+      function handleEnter(event) {
+        if (event.key === 'Enter') {
+          applyFilter();
+        }
+      }
+        </script>
+        </nav>
+    <nav>
+    <div class="dropdown">
+      <button>Menú</button>
+      <div class="dropdown-content">
+        <button onclick="promptCreateFile()">Crear Archivo</button>
+        <button onclick="promptCreateFolder()">Crear Carpeta</button>
+        <button onclick="openFile()">Abrir Archivo</button>
+        <button onclick="document.getElementById('fileInput').click()">Importar Archivo</button>
+        <input type="file" id="fileInput" multiple style="display: none;" />
+        <button onclick="exportFile()">Exportar Archivo</button>
+        <button onclick="document.getElementById('folderInput').click()">Importar Carpeta</button>
+        <input type="file" id="folderInput" webkitdirectory multiple style="display: none;" />
+        <button onclick="exportFolder()">Exportar Carpeta</button>
+        <button onclick="openFolder()">Abrir Carpeta</button>
+        <button onclick="pinItem()">Fijar</button>
+        <button onclick="unpinItem()">Desfijar</button>
+        <button onclick="viewFileInfo()">Información del Archivo</button>
+        <button onclick="createTag()">Crear Etiqueta</button>
+        <button onclick="deleteTag()">Borrar Etiqueta</button>
+        <button onclick="deleteItem()">Borrar Archivo/Carpeta</button>
+      </div>
+      <script>
+        function promptCreateFile() {
+          const fileName = prompt("Ingrese el nombre del archivo:");
+          if (fileName) {
+        const description = prompt("Ingrese una descripción para el archivo (opcional):");
+        const tag = prompt("Ingrese una etiqueta para el archivo (opcional):");
+        createFileElement(fileName, description, tag);
+          }
+        }
+
+        function promptCreateFolder() {
+          const folderName = prompt("Ingrese el nombre de la carpeta:");
+          if (folderName) {
+        const description = prompt("Ingrese una descripción para la carpeta (opcional):");
+        const tag = prompt("Ingrese una etiqueta para la carpeta (opcional):");
+        createFolderElement(folderName, description, tag);
+          }
+        }
+
+        function createFileElement(name, description, tag) {
+          const li = document.createElement('li');
+          li.textContent = name;
+
+          if (description) {
+        const descSpan = document.createElement('span');
+        descSpan.textContent = ` - ${description}`;
+        descSpan.style.fontStyle = 'italic';
+        li.appendChild(descSpan);
+          }
+
+          if (tag) {
+        const tagSpan = document.createElement('span');
+        tagSpan.textContent = ` [${tag}]`;
+        tagSpan.style.backgroundColor = 'var(--morado)';
+        tagSpan.style.color = 'var(--blanco)';
+        tagSpan.style.padding = '2px 5px';
+        tagSpan.style.borderRadius = '3px';
+        tagSpan.style.marginLeft = '5px';
+        li.appendChild(tagSpan);
+          }
+
+          document.getElementById('mainFolder').appendChild(li);
+        }
+
+        function createFolderElement(name, description, tag) {
+          const li = document.createElement('li');
+          li.textContent = name;
+
+          if (description) {
+        const descSpan = document.createElement('span');
+        descSpan.textContent = ` - ${description}`;
+        descSpan.style.fontStyle = 'italic';
+        li.appendChild(descSpan);
+          }
+
+          if (tag) {
+        const tagSpan = document.createElement('span');
+        tagSpan.textContent = ` [${tag}]`;
+        tagSpan.style.backgroundColor = 'var(--morado)';
+        tagSpan.style.color = 'var(--blanco)';
+        tagSpan.style.padding = '2px 5px';
+        tagSpan.style.borderRadius = '3px';
+        tagSpan.style.marginLeft = '5px';
+        li.appendChild(tagSpan);
+          }
+
+          const ul = document.createElement('ul');
+          ul.classList.add('hidden');
+          li.appendChild(ul);
+
+          document.getElementById('mainFolder').appendChild(li);
+        }
+      </script>
+    </div>
+    <script>
+      function exportFile() {
+        if (!selectedElement || !selectedElement.textContent) {
+          alert("Por favor, selecciona un archivo para exportar.");
+          return;
+        }
+
+        const fileName = selectedElement.textContent.trim();
+        const fileContent = "Contenido de ejemplo para el archivo " + fileName; // Reemplazar con el contenido real
+
+        const blob = new Blob([fileContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName + ".txt"; // Agregar extensión si es necesario
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+      }
+    </script>
+      <button>Ayuda</button>
+      <button>Perfil</button>
+    </nav>
+  </header>
+  <main>
+    <div class="main-content">
+      <div class="tab-container">
+        <div class="tabs">
+          <div class="tab active" onclick="showTab(0)">Archivero</div>
+          <div class="tab" onclick="showTab(1)">Recientes</div>
+          <div class="tab" onclick="showTab(2)">Fijados</div>
+        </div>
+        <div class="tab-content">
+          <div class="active">
+            <h3>Subir Carpeta</h3>
+            <ul id="fileList">
+              <li>
+                <span class="toggle-btn">▼</span>
+                Carpeta Principal
+                <ul id="mainFolder"></ul>
+              </li>
+            </ul>
+          </div>
+          <div>Contenido de la Pestaña 2</div>
+          <div>
+            <h3>Elementos Destacados</h3>
+            <ul id="pinnedList"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="aside-container">
+      <div class="arrow-bar" id="arrowBar">
+        <button class="arrow-toggle" onclick="toggleAside()" id="arrowBtn">▶</button>
+      </div>
+      <aside id="side-panel">
+        <h3>Aside</h3>
+        <p>Empresas destacadas, sugerencias IA, chat de ayuda.</p>
+      </aside>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 SORE - Sistema de Optimización de Recursos Empresariales</p>
+  </footer>
+  <script>
+    function toggleAside() {
+      const aside = document.getElementById("side-panel");
+      const arrow = document.getElementById("arrowBtn");
+      const arrowBar = document.getElementById("arrowBar");
+
+      aside.classList.toggle("hidden");
+
+      if (aside.classList.contains("hidden")) {
+        arrow.innerText = "◀";
+        arrowBar.classList.add("hidden");
+      } else {
+        arrow.innerText = "▶";
+        arrowBar.classList.remove("hidden");
+      }
+    }
+
+    function showTab(index) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content div');
+
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+
+      contents.forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+      });
+    }
+
+    const folderInput = document.getElementById('folderInput');
+    const fileInput = document.getElementById('fileInput');
+    const mainFolder = document.getElementById('mainFolder');
+    const pinnedList = document.getElementById('pinnedList');
+    const pinnedItems = new Map();
+
+    folderInput.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+
+        const folderStructure = {};
+
+        files.forEach(file => {
+            const pathParts = file.webkitRelativePath.split('/');
+            let currentLevel = folderStructure;
+
+            pathParts.forEach((part, index) => {
+                if (!currentLevel[part]) {
+                    currentLevel[part] = index === pathParts.length - 1 ? null : {};
+                }
+                currentLevel = currentLevel[part];
+            });
+        });
+
+        function createList(structure, parentPath = '') {
+            const ul = document.createElement('ul');
+            for (const key in structure) {
+            const li = document.createElement('li');
+            const toggleBtn = document.createElement('span');
+            toggleBtn.textContent = structure[key] ? '▶' : ''; // Flecha derecha
+            toggleBtn.className = 'toggle-btn';
+            toggleBtn.onclick = () => {
+                const childUl = li.querySelector('ul');
+                if (childUl) {
+                const isHidden = childUl.classList.toggle('hidden');
+                toggleBtn.textContent = isHidden ? '▶' : '▼'; // Alternar flecha
+                }
+            };
+
+            const icon = document.createElement('span');
+            icon.className = 'icon';
+            icon.style.marginRight = '5px';
+
+            // Determinar el icono según el tipo de archivo o carpeta
+            if (structure[key]) {
+                icon.textContent = '📁'; // Icono de carpeta
+            } else {
+                const fileType = key.split('.').pop().toLowerCase();
+                switch (fileType) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                    icon.textContent = '🖼️'; // Icono de imagen
+                    break;
+                case 'xls':
+                case 'xlsx':
+                    icon.textContent = '📊'; // Icono de Excel
+                    break;
+                case 'doc':
+                case 'docx':
+                    icon.textContent = '📄'; // Icono de Word
+                    break;
+                case 'html':
+                    icon.textContent = '🌐'; // Icono de HTML
+                    break;
+                case 'css':
+                    icon.textContent = '🎨'; // Icono de CSS
+                    break;
+                case 'js':
+                    icon.textContent = '📜'; // Icono de JavaScript
+                    break;
+                case 'java':
+                    icon.textContent = '☕'; // Icono de Java
+                    break;
+                case 'py':
+                    icon.textContent = '🐍'; // Icono de Python
+                    break;
+                case 'json':
+                    icon.textContent = '🗂️'; // Icono de JSON
+                    break;
+                default:
+                    icon.textContent = '📄'; // Icono genérico
+                }
+            }
+
+            const pin = document.createElement('span');
+            pin.textContent = '☆'; // Estrella vacía
+            pin.className = 'pin';
+            pin.onclick = (e) => {
+                e.stopPropagation();
+                const fullPath = parentPath + '/' + key;
+                if (pinnedItems.has(fullPath)) {
+                pinnedItems.delete(fullPath);
+                pin.classList.remove('active');
+                updatePinnedList();
+                } else {
+                pinnedItems.set(fullPath, structure[key]);
+                pin.classList.add('active');
+                updatePinnedList();
+                }
+            };
+
+            li.appendChild(toggleBtn);
+            li.appendChild(icon);
+            li.appendChild(document.createTextNode(key));
+            li.appendChild(pin);
+
+            if (structure[key]) {
+                const childUl = createList(structure[key], parentPath + '/' + key);
+                childUl.classList.add('hidden'); // Ocultar inicialmente
+                li.appendChild(childUl);
+            }
+
+            ul.appendChild(li);
+            }
+            return ul;
+        }
+
+        function updatePinnedList() {
+            pinnedList.innerHTML = '';
+            pinnedItems.forEach((structure, path) => {
+            const li = document.createElement('li');
+            li.textContent = path.split('/').pop();
+            pinnedList.appendChild(li);
+            });
+        }
+
+        const newList = createList(folderStructure);
+        Array.from(newList.children).forEach(child => {
+            mainFolder.appendChild(child); // Agregar nuevos elementos al nivel actual
+        });
+        });
+
+        fileInput.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            const icon = document.createElement('span');
+            icon.className = 'icon';
+            icon.style.marginRight = '5px';
+
+            // Determinar el icono según el tipo de archivo
+            const fileType = file.name.split('.').pop().toLowerCase();
+            switch (fileType) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+                icon.textContent = '🖼️'; // Icono de imagen
+                break;
+            case 'xls':
+            case 'xlsx':
+                icon.textContent = '📊'; // Icono de Excel
+                break;
+            case 'doc':
+            case 'docx':
+                icon.textContent = '📄'; // Icono de Word
+                break;
+            case 'html':
+                icon.textContent = '🌐'; // Icono de HTML
+                break;
+            case 'css':
+                icon.textContent = '🎨'; // Icono de CSS
+                break;
+            case 'js':
+                icon.textContent = '📜'; // Icono de JavaScript
+                break;
+            case 'java':
+                icon.textContent = '☕'; // Icono de Java
+                break;
+            case 'py':
+                icon.textContent = '🐍'; // Icono de Python
+                break;
+            case 'json':
+                icon.textContent = '🗂️'; // Icono de JSON
+                break;
+            default:
+                icon.textContent = '📄'; // Icono genérico
+            }
+
+            const pin = document.createElement('span');
+            pin.textContent = '☆'; // Estrella vacía
+            pin.className = 'pin';
+            pin.onclick = (e) => {
+            e.stopPropagation();
+            if (pinnedItems.has(file.name)) {
+                pinnedItems.delete(file.name);
+                pin.classList.remove('active');
+                updatePinnedList();
+            } else {
+                pinnedItems.set(file.name, file);
+                pin.classList.add('active');
+                updatePinnedList();
+            }
+            };
+
+            li.appendChild(icon);
+            li.appendChild(document.createTextNode(file.name));
+            li.appendChild(pin);
+
+            // Agregar evento de doble clic para abrir el archivo
+            li.ondblclick = () => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                openFileContent(file.name, e.target.result);
+            };
+            reader.readAsText(file);
+            };
+
+            mainFolder.appendChild(li); // Agregar nuevos archivos al nivel actual
+        });
+
+        function updatePinnedList() {
+            pinnedList.innerHTML = '';
+            pinnedItems.forEach((file, name) => {
+            const li = document.createElement('li');
+            li.textContent = name;
+            pinnedList.appendChild(li);
+            });
+        }
+        });
+
+    // Nuevo script para resaltar carpetas o archivos
+    let selectedElement = null;
+
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Verificar si se hizo clic en una carpeta o archivo
+        if (target.tagName === 'LI' || target.classList.contains('pin')) {
+            // Deseleccionar el elemento previamente seleccionado
+            if (selectedElement) {
+                selectedElement.classList.remove('highlight');
+            }
+
+            // Seleccionar el nuevo elemento
+            if (target.tagName === 'LI') {
+                selectedElement = target;
+            } else if (target.classList.contains('pin')) {
+                selectedElement = target.parentElement;
+            }
+
+            selectedElement.classList.add('highlight');
+        } else {
+            // Si se hace clic fuera de un archivo o carpeta, deseleccionar el elemento
+            if (selectedElement) {
+                selectedElement.classList.remove('highlight');
+                selectedElement = null;
+            }
+        }
+    });
+
+    // Deseleccionar el elemento si se hace clic fuera de la ventana
+    window.addEventListener('blur', () => {
+        if (selectedElement) {
+            selectedElement.classList.remove('highlight');
+            selectedElement = null;
+        }
+    });
+
+    // Funciones de ejemplo para los botones del menú
+    function createFile() {
+      alert("Crear Archivo");
+    }
+    function openFile() {
+      alert("Abrir Archivo");
+    }
+    function exportFile() {
+      alert("Exportar Archivo");
+    }
+    function importFile() {
+      alert("Importar Archivo");
+    }
+    function createFolder() {
+      alert("Crear Carpeta");
+    }
+    function openFolder() {
+      alert("Abrir Carpeta");
+    }
+    function exportFolder() {
+      alert("Exportar Carpeta");
+    }
+    function pinItem() {
+      if (selectedElement) {
+        const pin = selectedElement.querySelector('.pin');
+        if (pin) {
+          pin.click(); // Simular clic en el botón de fijar
+        }
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para fijar.");
+      }
+    }
+    function unpinItem() {
+      if (selectedElement) {
+        const pin = selectedElement.querySelector('.pin');
+        if (pin) {
+          pin.click(); // Simular clic en el botón de desfijar
+        }
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para desfijar.");
+      }
+    }
+    function viewFileInfo() {
+      if (selectedElement) {
+        const fileName = selectedElement.textContent.trim();
+        alert("Información del archivo: " + fileName);
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para ver información.");
+      }
+    }
+    function createTag() {
+      if (selectedElement) {
+        const tagName = prompt("Ingrese el nombre de la etiqueta:");
+        if (tagName) {
+          const tag = document.createElement('span');
+          tag.textContent = tagName;
+          tag.style.backgroundColor = 'var(--morado)';
+          tag.style.color = 'var(--blanco)';
+          tag.style.padding = '2px 5px';
+          tag.style.borderRadius = '3px';
+          selectedElement.appendChild(tag);
+        }
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para crear una etiqueta.");
+      }
+    }
+    function deleteTag() {
+      if (selectedElement) {
+        const tags = selectedElement.querySelectorAll('span');
+        if (tags.length > 0) {
+          const tagToDelete = prompt("Ingrese el nombre de la etiqueta a borrar:");
+          tags.forEach(tag => {
+            if (tag.textContent === tagToDelete) {
+              tag.remove();
+            }
+          });
+        } else {
+          alert("No hay etiquetas para borrar.");
+        }
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para borrar una etiqueta.");
+      }
+    }
+    function deleteItem() {
+      if (selectedElement) {
+        const confirmDelete = confirm("¿Estás seguro de que deseas borrar este archivo o carpeta?");
+        if (confirmDelete) {
+          selectedElement.remove();
+          selectedElement = null; // Limpiar la selección
+        }
+      } else {
+        alert("Por favor, selecciona un archivo o carpeta para borrar.");
+      }
+    }
+    // Crear el menú contextual al cargar la página
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const contextMenu = document.createElement('div');
+      contextMenu.id = 'contextMenu';
+      contextMenu.style.position = 'absolute';
+      contextMenu.style.display = 'none';
+      contextMenu.style.background = 'var(--blanco)';
+      contextMenu.style.boxShadow = '0px 8px 16px rgba(0, 0, 0, 0.2)';
+      contextMenu.style.borderRadius = '5px';
+      contextMenu.style.padding = '10px';
+      contextMenu.style.zIndex = '1000';
+
+      const menuOptions = [
+        { text: 'Crear Archivo', action: createFile },
+        { text: 'Abrir Archivo', action: openFile },
+        { text: 'Importar Archivo', action: () => document.getElementById('fileInput').click() },
+        { text: 'Exportar Archivo', action: exportFile },
+        { text: 'Importar Carpeta', action: () => document.getElementById('folderInput').click() },
+        { text: 'Exportar Carpeta', action: exportFolder },
+        { text: 'Crear Carpeta', action: createFolder },
+        { text: 'Abrir Carpeta', action: openFolder },
+        { text: 'Fijar', action: pinItem },
+        { text: 'Desfijar', action: unpinItem },
+        { text: 'Información del Archivo', action: viewFileInfo },
+        { text: 'Crear Etiqueta', action: createTag },
+        { text: 'Borrar Etiqueta', action: deleteTag },
+        { text: 'Borrar Archivo/Carpeta', action: deleteItem },
+      ];
+
+      menuOptions.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        button.style.display = 'block';
+        button.style.width = '100%';
+        button.style.marginBottom = '5px';
+        button.style.background = 'var(--gris-claro)';
+        button.style.border = 'none';
+        button.style.borderRadius = '5px';
+        button.style.cursor = 'pointer';
+        button.onclick = () => {
+          option.action();
+          contextMenu.style.display = 'none';
+        };
+        contextMenu.appendChild(button);
+      });
+
+      document.body.appendChild(contextMenu);
+
+      document.addEventListener('contextmenu', (event) => {
+        event.preventDefault(); // Evitar el menú contextual del navegador
+        const target = event.target;
+
+        if (target.tagName === 'LI' || target.classList.contains('pin')) {
+          // Mostrar el menú contextual
+          contextMenu.style.left = `${event.pageX}px`;
+          contextMenu.style.top = `${event.pageY}px`;
+          contextMenu.style.display = 'block';
+
+          // Resaltar el elemento seleccionado
+          if (selectedElement) {
+            selectedElement.classList.remove('highlight');
+          }
+          selectedElement = target.tagName === 'LI' ? target : target.parentElement;
+          selectedElement.classList.add('highlight');
+        } else {
+          // Ocultar el menú si se hace clic fuera
+          contextMenu.style.display = 'none';
+          if (selectedElement) {
+            selectedElement.classList.remove('highlight');
+            selectedElement = null;
+          }
+        }
+      });
+
+      // Ocultar el menú si se hace clic en cualquier lugar
+      document.addEventListener('click', () => {
+        contextMenu.style.display = 'none';
+      });
+
+      // Ocultar el menú si se hace clic fuera de la ventana
+      window.addEventListener('blur', () => {
+        contextMenu.style.display = 'none';
+        if (selectedElement) {
+          selectedElement.classList.remove('highlight');
+          selectedElement = null;
+        }
+      });
+    });
+
+    // Evitar la selección de texto al hacer doble clic en un archivo
+    document.addEventListener('mousedown', (event) => {
+      if (event.detail > 1) {
+      event.preventDefault();
+      }
+    });
+
+    // Manejar doble clic en carpetas y archivos
+    document.addEventListener('dblclick', (event) => {
+      const target = event.target;
+
+      // Si es una carpeta
+      if (target.tagName === 'LI' && target.querySelector('ul')) {
+      const toggleBtn = target.querySelector('.toggle-btn');
+      const childUl = target.querySelector('ul');
+      if (childUl) {
+        const isHidden = childUl.classList.toggle('hidden');
+        toggleBtn.textContent = isHidden ? '▶' : '▼'; // Alternar flecha
+      }
+      }
+
+      // Si es un archivo
+      if (target.tagName === 'LI' && !target.querySelector('ul')) {
+      const fileName = target.textContent.trim();
+      const fileContent = "Contenido de ejemplo para el archivo " + fileName; // Reemplazar con contenido real
+
+      // Crear ventana modal para mostrar el contenido del archivo
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '50%';
+      modal.style.left = '50%';
+      modal.style.transform = 'translate(-50%, -50%)';
+      modal.style.background = 'var(--blanco)';
+      modal.style.padding = '1rem';
+      modal.style.boxShadow = '0px 8px 16px rgba(0, 0, 0, 0.2)';
+      modal.style.borderRadius = '5px';
+      modal.style.zIndex = '1000';
+
+      const title = document.createElement('h3');
+      title.textContent = fileName;
+      modal.appendChild(title);
+
+      const content = document.createElement('pre');
+      content.textContent = fileContent; // Mostrar contenido del archivo
+      content.style.whiteSpace = 'pre-wrap';
+      content.style.wordWrap = 'break-word';
+      modal.appendChild(content);
+
+      const closeButton = document.createElement('button');
+      closeButton.textContent = 'Cerrar';
+      closeButton.style.marginTop = '1rem';
+      closeButton.style.padding = '0.5rem';
+      closeButton.style.borderRadius = '5px';
+      closeButton.style.border = 'none';
+      closeButton.style.background = 'var(--gris-claro)';
+      closeButton.style.cursor = 'pointer';
+      closeButton.onclick = () => {
+        modal.remove();
+      };
+      modal.appendChild(closeButton);
+
+      document.body.appendChild(modal);
+      }
+    });
+  </script>
+</body>
+</html>
