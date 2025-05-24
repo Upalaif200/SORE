@@ -1,449 +1,82 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/script/script.js" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SORE</title>
-  <style>
-    :root {
-      --morado: #6a1b9a;
-      --gris-claro: #e0e0e0;
-      --gris-oscuro: #424242;
-      --blanco: #ffffff;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--gris-claro);
-      color: var(--gris-oscuro);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--morado); 
-      color: var(--blanco);
-      padding: 0.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    nav {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      position: relative;
-    }
-
-    nav button {
-      background: var(--gris-claro);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background: var(--blanco);
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      padding: 1rem;
-      z-index: 1;
-      border-radius: 5px;
-      min-width: 200px;
-    }
-
-    .dropdown-content button {
-      display: block;
-      width: 100%;
-      padding: 0.5rem;
-      background: var(--gris-claro);
-      border: none;
-      border-radius: 5px;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .dropdown-content button:hover {
-      background: var(--morado);
-      color: var(--blanco);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .main-content {
-      flex: 3;
-      background: var(--blanco);
-      padding: 0rem 1rem 1rem;
-      margin: 1rem;
-      border-radius: 10px;
-      min-width: 200px;
-    }
-
-    .tab-container {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-
-    .tabs {
-      display: flex;
-      cursor: pointer;
-      max-width: 50%;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      background-color: #f2f2f2;
-      transition: 0.3s all;
-    }
-
-    .tab.active {
-      background-color: #ffffff;
-      font-weight: bold;
-      transition: 0.3s all;
-      transform: translateY(-10px);
-      border-radius: 15px 15px 0 0;
-    }
-
-    .tab-content {
-      border-top: 1px solid #ccc;
-      padding: 20px;
-      background-color: #fff;
-    }
-
-    .tab-content div {
-      display: none;
-    }
-
-    .tab-content div.active {
-      display: block;
-    }
-
-    ul {
-      list-style-type: none;
-      padding-left: 20px;
-    }
-
-    ul li {
-      margin: 5px 0;
-      position: relative;
-    }
-
-    .toggle-btn {
-      cursor: pointer;
-      margin-right: 5px;
-      font-size: 12px;
-      user-select: none;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .highlight {
-      background-color: #d3d3d3;
-    }
-
-    .pin {
-      float: right;
-      cursor: pointer;
-      font-size: 16px;
-      color: gray;
-    }
-
-    .pin.active {
-      color: gold;
-    }
-
-    .aside-container {
-      display: flex;
-      flex-direction: row;
-      position: relative;
-    }
-
-    aside {
-      flex: 1;
-      background: var(--gris-oscuro);
-      color: var(--blanco);
-      padding: 1rem;
-      margin: 1rem 0 1rem 0;
-      min-width: 250px;
-      display: block;
-    }
-
-    aside.hidden {
-      position: absolute;
-    }
-
-    .arrow-toggle {
-      width: 25px;
-      background: var(--morado);
-      color: var(--blanco);
-      border: none;
-      cursor: pointer;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 15px 15px 0;
-      padding: 0;
-      height: 100%;
-    }
-
-    .arrow-bar {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: var(--morado);
-      border-radius: 5px 0 0 5px;
-      margin: 1rem 0;
-    }
-
-    .arrow-bar.hidden {
-      border-radius: 5px;
-    }
-
-    footer {
-      background: var(--morado);
-      color: var(--blanco);
-      text-align: center;
-      padding: 0.4rem;
-    }
-
-    @media (max-width: 768px) {
-      main {
-        flex-direction: column;
-      }
-
-      .aside-container {
-        width: 100%;
-        flex-direction: column;
-      }
-
-      .arrow-bar {
-        display: none;
-      }
-
-      aside {
-        display: block !important;
-        border-radius: 0;
-        width: 100%;
-        margin: 0;
-      }
-
-      .main-content {
-        width: 100%;
-        margin: 1rem 0;
-      }
-    }
-  </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <h1>SORE</h1>
-    </div>
-    <nav>
-      <div class="dropdown">
-        <button>Menú</button>
-        <div class="dropdown-content">
-          <button onclick="createFile()">Crear Archivo</button>
-          <button onclick="openFile()">Abrir Archivo</button>
-          <button onclick="importFile()">Importar Archivo</button>
-          <button onclick="exportFile()">Exportar Archivo</button>
-          <button onclick="createFolder()">Crear Carpeta</button>
-          <button onclick="openFolder()">Abrir Carpeta</button>
-          <button onclick="pinItem()">Fijar</button>
-          <button onclick="unpinItem()">Desfijar</button>
-          <button onclick="viewFileInfo()">Información del Archivo</button>
-          <button onclick="createTag()">Crear Etiqueta</button>
-          <button onclick="deleteTag()">Borrar Etiqueta</button>
-          <button onclick="deleteItem()">Borrar Archivo/Carpeta</button>
-        </div>
-      </div>
-      <button>Buscar</button>
-      <button>Ayuda</button>
-      <button>Perfil</button>
-    </nav>
-  </header>
-  <main>
-    <div class="main-content">
-      <div class="tab-container">
-        <div class="tabs">
-          <div class="tab active" onclick="showTab(0)">Archivero</div>
-          <div class="tab" onclick="showTab(1)">Recientes</div>
-          <div class="tab" onclick="showTab(2)">Fijados</div>
-        </div>
-        <div class="tab-content">
-          <div class="active">
-            <h3>Subir Carpeta</h3>
-            <input type="file" id="folderInput" webkitdirectory multiple>
-            <ul id="fileList">
+  <div id="subbody">
+    <header>
+      <div class="subs" id="subheader">
+        <div id="logo"></div>
+        <div id="menu">
+          <nav>
+            <ul>
               <li>
-                <span class="toggle-btn">▼</span>
-                Carpeta Principal
-                <ul id="mainFolder"></ul>
+                <a href="">Home
+                  <div class="dropdown-content"></div>
+                </a>
+              </li>
+              <li>
+                <a href="">About us
+                  <div class="dropdown-content"></div>
+                </a>
+              </li>
+              <li>
+                <a href="">Objetives
+                  <div class="dropdown-content"></div>
+                </a>
+              </li>
+              <li>
+                <a href="indexInicio.html">APP
+                  <div class="dropdown-content"></div>
+                </a>
+              </li>
+              <li>
+                <a href="">Contact
+                  <div class="dropdown-content"></div>
+                </a>
               </li>
             </ul>
-          </div>
-          <div>Contenido de la Pestaña 2</div>
-          <div>
-            <h3>Elementos Destacados</h3>
-            <ul id="pinnedList"></ul>
-          </div>
+          </nav>
         </div>
       </div>
-    </div>
-
-    <div class="aside-container">
-      <div class="arrow-bar" id="arrowBar">
-        <button class="arrow-toggle" onclick="toggleAside()" id="arrowBtn">▶</button>
-      </div>
-      <aside id="side-panel">
-        <h3>Aside</h3>
-        <p>Empresas destacadas, sugerencias IA, chat de ayuda.</p>
+    </header>
+    <main>
+      <section class="sections" id="sec-1">
+        <h1>SORE</h1>
+      </section>
+      <section class="sections" id="sec-2">
+        <h2>Who us?</h2>
+      </section>
+      <section class="sections" id="sec-3">
+        <h2>Objetives</h2>
+      </section>
+      <article class="sections" id="art-1">
+        <h3>APP</h3>
+      </article>
+      <aside>
+        <h3>Estaditics Datas</h3>
       </aside>
-    </div>
-  </main>
-  <footer>
-    <p>© 2025 SORE - Sistema de Optimización de Recursos Empresariales</p>
-  </footer>
-  <script>
-    function toggleAside() {
-      const aside = document.getElementById("side-panel");
-      const arrow = document.getElementById("arrowBtn");
-      const arrowBar = document.getElementById("arrowBar");
-
-      aside.classList.toggle("hidden");
-
-      if (aside.classList.contains("hidden")) {
-        arrow.innerText = "◀";
-        arrowBar.classList.add("hidden");
-      } else {
-        arrow.innerText = "▶";
-        arrowBar.classList.remove("hidden");
-      }
-    }
-
-    function showTab(index) {
-      const tabs = document.querySelectorAll('.tab');
-      const contents = document.querySelectorAll('.tab-content div');
-
-      tabs.forEach((tab, i) => {
-        tab.classList.toggle('active', i === index);
-      });
-
-      contents.forEach((content, i) => {
-        content.classList.toggle('active', i === index);
-      });
-    }
-
-    const folderInput = document.getElementById('folderInput');
-    const mainFolder = document.getElementById('mainFolder');
-    const pinnedList = document.getElementById('pinnedList');
-    const pinnedItems = new Map();
-
-    folderInput.addEventListener('change', (event) => {
-      mainFolder.innerHTML = ''; // Limpiar la lista de archivos
-      const files = Array.from(event.target.files);
-
-      const folderStructure = {};
-
-      files.forEach(file => {
-        const pathParts = file.webkitRelativePath.split('/');
-        let currentLevel = folderStructure;
-
-        pathParts.forEach((part, index) => {
-          if (!currentLevel[part]) {
-            currentLevel[part] = index === pathParts.length - 1 ? null : {};
-          }
-          currentLevel = currentLevel[part];
-        });
-      });
-
-      function createList(structure, parentPath = '') {
-        const ul = document.createElement('ul');
-        for (const key in structure) {
-          const li = document.createElement('li');
-          const toggleBtn = document.createElement('span');
-          toggleBtn.textContent = structure[key] ? '▶' : ''; // Flecha derecha
-          toggleBtn.className = 'toggle-btn';
-          toggleBtn.onclick = () => {
-            const childUl = li.querySelector('ul');
-            if (childUl) {
-              const isHidden = childUl.classList.toggle('hidden');
-              toggleBtn.textContent = isHidden ? '▶' : '▼'; // Alternar flecha
-            }
-          };
-
-          const pin = document.createElement('span');
-          pin.textContent = '☆'; // Estrella vacía
-          pin.className = 'pin';
-          pin.onclick = (e) => {
-            e.stopPropagation();
-            const fullPath = parentPath + '/' + key;
-            if (pinnedItems.has(fullPath)) {
-              pinnedItems.delete(fullPath);
-              pin.classList.remove('active');
-              updatePinnedList();
-            } else {
-              pinnedItems.set(fullPath, structure[key]);
-              pin.classList.add('active');
-              updatePinnedList();
-            }
-          };
-
-          li.appendChild(toggleBtn);
-          li.appendChild(document.createTextNode(key));
-          li.appendChild(pin);
-
-          if (structure[key]) {
-            const childUl = createList(structure[key], parentPath + '/' + key);
-            childUl.classList.add('hidden'); // Ocultar inicialmente
-            li.appendChild(childUl);
-          }
-
-          ul.appendChild(li);
-        }
-        return ul;
-      }
-
-      function updatePinnedList() {
-        pinnedList.innerHTML = '';
-        pinnedItems.forEach((structure, path) => {
-          const li = document.createElement('li');
-          li.textContent = path.split('/').pop();
-          pinnedList.appendChild(li);
-        });
-      }
-
-      mainFolder.appendChild(createList(folderStructure));
-    });
-  </script>
+    </main>
+    <footer>
+      <div class="subs" id="subfooter">
+        <div id="politics">
+          <a> Politica de Uso </a>
+          <a> Politica de Privacidad </a>
+          <a> Politica de Cookies </a>
+        </div>
+        <div id="copyright">
+          <p>&copy; 2025 SORE. All rights reserved.</p>
+        </div>
+        <div id="social">
+          <a href="https://www.facebook.com/"><img src="images/facebook.png" alt="Facebook"></a>
+          <a href="https://www.instagram.com/"><img src="images/instagram.png" alt="Instagram"></a>
+          <a href="https://twitter.com/"><img src="images/twitter.png" alt="Twitter"></a>
+        </div>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
